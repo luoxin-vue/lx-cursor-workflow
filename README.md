@@ -18,12 +18,20 @@ lx-tdd / lx-subagent
 
 前半段只分析和写文档；没有明确确认计划，后半段不得改业务代码。
 
+## 先看完整效果
+
+不要只看安装命令，先看一个从模糊需求到可执行任务的完整案例：
+
+👉 [订单批量归档：一眼看懂 lx 工作流](docs/case-study-order-bulk-archive.md)
+
+这个案例展示了每一步实际输入什么、Agent 应该问什么、会生成什么文档，以及什么时候才开始写测试和代码。
+
 ## 安装
 
 ### Windows PowerShell
 
 ```powershell
-git clone https://github.com/<你的用户名>/lx-cursor-workflow.git
+git clone https://github.com/luoxin-vue/lx-cursor-workflow.git
 cd lx-cursor-workflow
 .\install.ps1
 ```
@@ -37,7 +45,7 @@ cd lx-cursor-workflow
 ### macOS / Linux
 
 ```bash
-git clone https://github.com/<你的用户名>/lx-cursor-workflow.git
+git clone https://github.com/luoxin-vue/lx-cursor-workflow.git
 cd lx-cursor-workflow
 ./install.sh
 ```
@@ -100,4 +108,3 @@ uninstall.ps1 / ...       卸载器
 ## 上游致谢
 
 本项目的工作流思想和部分规范参考 Matt Pocock 的公开 Skills，并以独立的 `lx-*` 命名空间重新组织和补充中文说明。请见 [NOTICE.md](NOTICE.md) 与 [LICENSE](LICENSE)。
-
