@@ -1,0 +1,66 @@
+# lx-cursor-workflow 规格
+
+## Problem Statement
+
+团队想在 Cursor 中复用一套从需求澄清、方案发散、实施计划到 TDD/Subagent 执行的工程工作流，但每位同事的个人 Skills 和项目配置可能不同。若直接安装同名 Skill 或要求额外依赖，容易产生覆盖、冲突和不可复现的问题。
+
+## Solution
+
+提供公开 GitHub 仓库 `lx-cursor-workflow`，以 `lx-` 为命名空间发布一组自包含 Cursor Agent Skills，并提供 Windows PowerShell、macOS/Linux Shell 安装器。安装器只操作用户级 Cursor Skills 目录，具备冲突预检、重复安装跳过、预览和安全卸载能力。工作流把文档阶段与代码阶段分开，用户确认计划后才允许 TDD 或 Subagent 实施。
+
+## User Stories
+
+1. 作为分享者，我想用一个公开 GitHub 仓库分发整套工作流，以便同事能直接安装。
+2. 作为 Windows 用户，我想运行一个 PowerShell 命令完成全局安装，以便不必手动复制文件。
+3. 作为 macOS/Linux 用户，我想运行一个 Shell 命令完成全局安装，以便获得一致体验。
+4. 作为已有个人 Skill 的 Cursor 用户，我想保留现有配置，以便安装新工作流不会破坏我的习惯。
+5. 作为安装者，我想在安装前预览变更，以便知道它将写入哪些目录。
+6. 作为安装者，我想在内容相同的情况下重复执行安装，以便安装过程幂等。
+7. 作为安装者，我想在发生同名不同内容冲突时得到清晰报告，以便人工决定如何处理。
+8. 作为安装者，我想卸载本工作流，以便恢复到安装前的个人配置。
+9. 作为开发者，我想先用逐个问题的 Grill 访谈澄清需求，以便减少错误假设。
+10. 作为开发者，我想在需求清晰后生成多个候选方案，以便比较而非过早锁定。
+11. 作为开发者，我想把确认过的方案写成有依赖和验收条件的计划，以便拆成可执行任务。
+12. 作为开发者，我想在计划确认前禁止业务代码修改，以便保留人工决策权。
+13. 作为开发者，我想按垂直切片执行 TDD，以便每一步都有可运行的反馈。
+14. 作为开发者，我想让 Subagent 一次处理一个清晰任务，以便降低上下文和文件冲突。
+15. 作为开发者，我想只在任务独立且文件不重叠时并行 Subagent，以便利用并行同时保持安全。
+16. 作为团队成员，我想把术语、ADR、头脑风暴和计划写入项目文档，以便后续会话可以复用决策。
+17. 作为分享参与者，我想看到每个 Skill 的输入、输出和确认点，以便理解这套方法而不是只记命令。
+18. 作为维护者，我想通过版本化仓库发布更新，以便流程变化可审查、可回滚。
+19. 作为维护者，我想保留上游致谢和 MIT 许可，以便正确发布衍生内容。
+
+## Implementation Decisions
+
+- 采用 Cursor Agent Skills 标准，每个 Skill 是带 YAML frontmatter 的 `SKILL.md` 目录。
+- 使用 `lx-` 前缀隔离本项目 Skill，不依赖或覆盖同名上游 Skill。
+- 提供 `lx-workflow` 作为流程导航 Skill；其他 Skill 保持单一职责。
+- `lx-grill`、`lx-brainstorm`、`lx-writing-plan` 和 `lx-subagent` 由用户显式调用；`lx-tdd` 可由用户调用，也可在任务符合 TDD 时被 Agent 采用。
+- 所有工作流文档按需写入 `docs/lx-workflow/`，与项目已有文档结构隔离。
+- 计划必须带有明确的用户确认状态，代码执行 Skill 在缺少确认时停止并要求确认。
+- Subagent 默认串行；并行前必须检查任务依赖、共享文件和合并风险。
+- 安装器目标是 Cursor 用户级 Skills 目录；不修改项目级 `.cursor/skills`、用户规则或其他 Agent 配置。
+- 安装采用全量冲突预检和只新增策略；没有默认覆盖选项。
+- 卸载器只移除安装器记录且未被用户修改的目录。
+- 仓库包含上游致谢、MIT 许可、中文文档和安装演练说明。
+
+## Testing Decisions
+
+- 测试安装器的外部行为，不测试 PowerShell 或 Shell 的内部实现细节。
+- 主要测试切面是：在隔离的临时用户目录中运行安装器，验证首次安装、重复安装、同名冲突、`-WhatIf` 和卸载。
+- Skill 文案通过结构检查验证：目录名、Skill 名、frontmatter、命名空间和必需的确认门存在。
+- 不把业务项目测试框架引入本仓库；安装器验证脚本使用 PowerShell 或 POSIX Shell 可用的标准工具。
+
+## Out of Scope
+
+- 自动创建或配置 GitHub 仓库、GitHub Token、团队权限和 Cursor Team Marketplace。
+- 覆盖、合并或删除同事已有的个人 Skills。
+- 自动修改项目的 `.cursor/rules`、用户规则、MCP、Hooks 或 Subagents 配置。
+- 自动替用户批准计划、自动提交代码或自动创建 Pull Request。
+- 提供所有编程语言的测试命令；TDD Skill 要求 Agent 识别项目已有测试命令。
+- 在本仓库内复制完整的 Matt Pocock 上游仓库。
+
+## Further Notes
+
+仓库首次生成后，需要绑定用户自己的 GitHub 远端，并在分享前用一个隔离目录运行验证脚本。若未来需要团队级强制分发，再考虑 Cursor Plugin 或 Team Marketplace；本版本优先保持普通 GitHub 仓库即可安装。
+

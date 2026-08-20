@@ -1,0 +1,17 @@
+{
+  "name": "lx-cursor-workflow",
+  "version": "0.1.0",
+  "namespace": "lx-",
+  "cursorUserSkillsRelativePath": ".cursor/skills",
+  "skills": [
+    "lx-workflow",
+    "lx-grill",
+    "lx-brainstorm",
+    "lx-writing-plan",
+    "lx-tdd",
+    "lx-subagent"
+  ],
+  "docsRelativePath": "docs/lx-workflow",
+  "installPolicy": "add-only; identical content is skipped; conflicting content stops without overwrite"
+}
+
