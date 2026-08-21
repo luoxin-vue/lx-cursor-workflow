@@ -1,6 +1,6 @@
 ---
 name: lx-writing-plan
-description: 把已确认的需求和方案拆成可执行、可验证、有依赖关系的实施计划，并写入 docs/lx-workflow/plans/。
+description: 把已确认的新需求方案或 Bug 修复方案拆成可执行、可验证、有依赖关系的实施计划，并写入 docs/lx-workflow/plans/。
 disable-model-invocation: true
 ---
 
@@ -9,7 +9,7 @@ disable-model-invocation: true
 ## 前置条件
 
 - 读取 `docs/lx-workflow/CONTEXT.md` 和相关 ADR（如果存在）。
-- 检查当前对话中是否已经确认目标、范围、方案和验收方向；缺少关键决策时，停止并指出缺口。
+- 检查当前对话中是否已经确认目标、范围、方案或根因、以及验收方向；缺少关键决策时，停止并指出缺口。
 - 不把“看起来合理”当成用户确认。
 
 ## 计划内容
@@ -17,7 +17,7 @@ disable-model-invocation: true
 在 `docs/lx-workflow/plans/` 创建一个描述性 Markdown 文件，包含：
 
 - 背景、目标和明确的非目标；
-- 已确认的方案和关键实现决策；
+- 已确认的方案和关键实现决策；Bug 修复还要记录根因证据和回归测试切面；
 - 任务清单，每项只包含一个可交付的垂直切片；
 - 任务之间的阻塞关系和可并行关系；
 - 每项任务的公共测试切面、验收条件和验证命令；

@@ -2,11 +2,11 @@
 
 ## Problem Statement
 
-团队想在 Cursor 中复用一套从需求澄清、方案发散、实施计划到 TDD/Subagent 执行的工程工作流，但每位同事的个人 Skills 和项目配置可能不同。若直接安装同名 Skill 或要求额外依赖，容易产生覆盖、冲突和不可复现的问题。
+团队想在 Cursor 中复用一套区分新需求与 Bug 修复、并能从问题事实走到 TDD/Subagent 执行的工程工作流，但每位同事的个人 Skills 和项目配置可能不同。若直接安装同名 Skill 或要求额外依赖，容易产生覆盖、冲突和不可复现的问题。
 
 ## Solution
 
-提供公开 GitHub 仓库 `lx-cursor-workflow`，以 `lx-` 为命名空间发布一组自包含 Cursor Agent Skills，并提供 Windows PowerShell、macOS/Linux Shell 安装器。安装器只操作用户级 Cursor Skills 目录，具备冲突预检、重复安装跳过、预览和安全卸载能力。工作流把文档阶段与代码阶段分开，用户确认计划后才允许 TDD 或 Subagent 实施。
+提供公开 GitHub 仓库 `lx-cursor-workflow`，以 `lx-` 为命名空间发布一组自包含 Cursor Agent Skills，并提供 Windows PowerShell、macOS/Linux Shell 安装器。安装器只操作用户级 Cursor Skills 目录，具备冲突预检、重复安装跳过、预览和安全卸载能力。工作流把新需求线和 Bug 修复线分开，并把文档阶段与代码阶段分开，用户确认计划后才允许 TDD 或 Subagent 实施。
 
 ## User Stories
 
@@ -29,14 +29,19 @@
 17. 作为分享参与者，我想看到每个 Skill 的输入、输出和确认点，以便理解这套方法而不是只记命令。
 18. 作为维护者，我想通过版本化仓库发布更新，以便流程变化可审查、可回滚。
 19. 作为维护者，我想保留上游致谢和 MIT 许可，以便正确发布衍生内容。
+20. 作为开发者，我想在已有行为出错时先复现并定位根因，以便不把 Bug 当成新需求重新设计。
+21. 作为开发者，我想先写失败的回归测试再修复 Bug，以便证明修复确实覆盖原问题。
+22. 作为开发者，我想在简单 Bug 和复杂 Bug 之间选择不同的方案发散强度，以便避免无效流程或过早修改。
 
 ## Implementation Decisions
 
 - 采用 Cursor Agent Skills 标准，每个 Skill 是带 YAML frontmatter 的 `SKILL.md` 目录。
 - 使用 `lx-` 前缀隔离本项目 Skill，不依赖或覆盖同名上游 Skill。
 - 提供 `lx-workflow` 作为流程导航 Skill；其他 Skill 保持单一职责。
+- 提供 `lx-bugfix` 作为已有行为错误、回归、异常、性能退化和测试失败的专用入口；新能力仍从 `lx-grill` 开始。
 - `lx-grill`、`lx-brainstorm`、`lx-writing-plan` 和 `lx-subagent` 由用户显式调用；`lx-tdd` 可由用户调用，也可在任务符合 TDD 时被 Agent 采用。
 - 所有工作流文档按需写入 `docs/lx-workflow/`，与项目已有文档结构隔离。
+- Bug 修复计划必须记录最小复现、根因证据、回归测试切面、非目标和验证结果。
 - 计划必须带有明确的用户确认状态，代码执行 Skill 在缺少确认时停止并要求确认。
 - Subagent 默认串行；并行前必须检查任务依赖、共享文件和合并风险。
 - 安装器目标是 Cursor 用户级 Skills 目录；不修改项目级 `.cursor/skills`、用户规则或其他 Agent 配置。
@@ -48,7 +53,7 @@
 
 - 测试安装器的外部行为，不测试 PowerShell 或 Shell 的内部实现细节。
 - 主要测试切面是：在隔离的临时用户目录中运行安装器，验证首次安装、重复安装、同名冲突、`-WhatIf` 和卸载。
-- Skill 文案通过结构检查验证：目录名、Skill 名、frontmatter、命名空间和必需的确认门存在。
+- Skill 文案通过结构检查验证：目录名、Skill 名、frontmatter、命名空间和必需的确认门存在；`lx-bugfix` 还必须包含复现、根因、回归测试和计划确认门。
 - 不把业务项目测试框架引入本仓库；安装器验证脚本使用 PowerShell 或 POSIX Shell 可用的标准工具。
 
 ## Out of Scope

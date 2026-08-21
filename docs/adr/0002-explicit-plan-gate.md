@@ -10,7 +10,7 @@
 
 ## 决策
 
-`lx-grill`、`lx-brainstorm`、`lx-writing-plan` 只允许澄清、发散、记录和规划。计划必须由用户明确确认；确认后才可使用 `lx-tdd` 或 `lx-subagent` 修改业务代码。
+`lx-bugfix`、`lx-grill`、`lx-brainstorm`、`lx-writing-plan` 只允许复现、诊断、澄清、发散、记录和规划。计划必须由用户明确确认；确认后才可使用 `lx-tdd` 或 `lx-subagent` 修改业务代码。`lx-bugfix` 可以在确认前运行最小复现和只读诊断，但不得以诊断为名修改业务代码。
 
 ## 后果
 

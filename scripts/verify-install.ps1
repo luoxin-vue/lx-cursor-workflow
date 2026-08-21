@@ -22,6 +22,7 @@ try {
     & $powershell -NoProfile -ExecutionPolicy Bypass -File $install | Out-Host
     $destination = Join-Path $tempRoot '.cursor\skills'
     Assert-True (Test-Path (Join-Path $destination 'lx-grill\SKILL.md')) '首次安装缺少 lx-grill'
+    Assert-True (Test-Path (Join-Path $destination 'lx-bugfix\SKILL.md')) '首次安装缺少 lx-bugfix'
     Assert-True (Test-Path (Join-Path $tempRoot '.cursor\lx-cursor-workflow.manifest.json')) '缺少安装记录'
 
     & $powershell -NoProfile -ExecutionPolicy Bypass -File $install | Out-Host

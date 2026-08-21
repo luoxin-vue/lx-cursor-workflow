@@ -5,6 +5,7 @@
   "cursorUserSkillsRelativePath": ".cursor/skills",
   "skills": [
     "lx-workflow",
+    "lx-bugfix",
     "lx-grill",
     "lx-brainstorm",
     "lx-writing-plan",

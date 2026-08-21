@@ -1,19 +1,24 @@
 # lx-cursor-workflow
 
-一套面向 Cursor 的全局 AI 工程工作流：先把想法问清楚，再发散方案、沉淀计划，最后用 TDD 和 Subagent 小步实施。
+一套面向 Cursor 的全局 AI 工程工作流：区分新需求和 Bug 修复，先澄清或复现问题，再沉淀计划，最后用 TDD 和 Subagent 小步实施。
 
 ## 工作流
 
 ```text
-lx-grill
-   ↓
-lx-brainstorm
-   ↓
-lx-writing-plan
-   ↓  用户确认计划
-lx-tdd / lx-subagent
-   ↓
-人工验收与代码审查
+请求分类
+   ├─ 新需求 → lx-grill
+   │             ↓
+   │         lx-brainstorm（可选）
+   │             ↓
+   └─ Bug   → lx-bugfix
+                 ↓
+             lx-brainstorm（根因/方案不清时可选）
+                 ↓
+          lx-writing-plan
+                 ↓  用户确认计划
+          lx-tdd / lx-subagent
+                 ↓
+          人工验收与代码审查
 ```
 
 前半段只分析和写文档；没有明确确认计划，后半段不得改业务代码。
@@ -22,7 +27,7 @@ lx-tdd / lx-subagent
 
 不要只看安装命令，先看一个从模糊需求到可执行任务的完整案例：
 
-👉 [订单批量归档：一眼看懂 lx 工作流](docs/case-study-order-bulk-archive.md)
+👉 [员工花名册高级筛选与自定义表头：一眼看懂 lx 工作流](docs/case-study-order-bulk-archive.md)
 
 这个案例展示了每一步实际输入什么、Agent 应该问什么、会生成什么文档，以及什么时候才开始写测试和代码。
 
@@ -61,7 +66,7 @@ macOS/Linux: ~/.cursor/skills/
 
 ## 使用
 
-在 Cursor Agent 中按顺序输入：
+新需求在 Cursor Agent 中按顺序输入：
 
 ```text
 /lx-workflow
@@ -69,6 +74,15 @@ macOS/Linux: ~/.cursor/skills/
 /lx-brainstorm
 /lx-writing-plan
 ```
+
+Bug 修复从专用入口开始：
+
+```text
+/lx-workflow
+/lx-bugfix
+```
+
+它会先固定复现事实、定位根因并设计回归测试；根因和修复方向不清晰时再使用 `/lx-brainstorm`。
 
 阅读并确认 `docs/lx-workflow/plans/` 中的计划后，再输入：
 
@@ -96,7 +110,7 @@ macOS/Linux: ~/.cursor/skills/
 ## 目录
 
 ```text
-skills/                  全局安装的 Cursor Skills
+skills/                  全局安装的 Cursor Skills（含需求和 Bug 修复入口）
 docs/spec.md             本项目规格
 docs/CONTEXT.md          术语表
 docs/adr/                 关键架构决策
