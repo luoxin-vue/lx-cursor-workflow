@@ -62,7 +62,7 @@ Windows: %USERPROFILE%\\.cursor\\skills\\
 macOS/Linux: ~/.cursor/skills/
 ```
 
-安装器只新增 `lx-*` 目录。目标目录已经存在且内容不同就报告冲突并停止，不覆盖任何个人 Skill；内容相同则跳过。
+安装器只新增清单中的工作流目录（包括 `lx-*`、`karpathy-guidelines` 和 `ponytail`）。目标目录已经存在且内容不同就报告冲突并停止，不覆盖任何个人 Skill；内容相同则跳过。
 
 ## 使用
 
@@ -110,7 +110,7 @@ Bug 修复从专用入口开始：
 ## 目录
 
 ```text
-skills/                  全局安装的 Cursor Skills（含需求和 Bug 修复入口）
+skills/                  全局安装的 Cursor Skills（含需求、Bug 修复和编码约束入口）
 docs/spec.md             本项目规格
 docs/CONTEXT.md          术语表
 docs/adr/                 关键架构决策

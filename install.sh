@@ -16,7 +16,7 @@ SOURCE_ROOT="$REPO_ROOT/skills"
 CURSOR_ROOT="${HOME}/.cursor"
 DEST_ROOT="$CURSOR_ROOT/skills"
 RECORD_PATH="$CURSOR_ROOT/lx-cursor-workflow.manifest"
-SKILLS=(lx-workflow lx-bugfix lx-grill lx-brainstorm lx-writing-plan lx-tdd lx-subagent)
+SKILLS=(lx-workflow lx-bugfix lx-grill lx-brainstorm lx-writing-plan lx-tdd lx-subagent karpathy-guidelines ponytail)
 
 hash_file() {
   if command -v sha256sum >/dev/null 2>&1; then sha256sum "$1" | awk '{print $1}'; else shasum -a 256 "$1" | awk '{print $1}'; fi

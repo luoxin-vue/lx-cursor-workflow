@@ -10,7 +10,9 @@
     "lx-brainstorm",
     "lx-writing-plan",
     "lx-tdd",
-    "lx-subagent"
+    "lx-subagent",
+    "karpathy-guidelines",
+    "ponytail"
   ],
   "docsRelativePath": "docs/lx-workflow",
   "installPolicy": "add-only; identical content is skipped; conflicting content stops without overwrite"
