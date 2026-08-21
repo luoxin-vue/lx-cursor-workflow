@@ -10,7 +10,7 @@
    │             ↓
    │         lx-brainstorm（可选）
    │             ↓
-   └─ Bug   → lx-bugfix
+   └─ Bug   → lx-bugfix（fast / standard / deep）
                  ↓
              lx-brainstorm（根因/方案不清时可选）
                  ↓
@@ -82,7 +82,7 @@ Bug 修复从专用入口开始：
 /lx-bugfix
 ```
 
-它会先固定复现事实、定位根因并设计回归测试；根因和修复方向不清晰时再使用 `/lx-brainstorm`。
+它会先固定复现事实、定位根因并选择 `fast`、`standard` 或 `deep` 模式；根因和修复方向不清晰时再使用 `/lx-brainstorm`。简单 Bug 不会被强行拉成长流程。
 
 阅读并确认 `docs/lx-workflow/plans/` 中的计划后，再输入：
 
