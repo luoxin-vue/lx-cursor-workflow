@@ -1,7 +1,9 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
     [switch]$WhatIf,
-    [switch]$Uninstall
+    [switch]$Uninstall,
+    [switch]$SkipCodeGraph,
+    [string]$ProjectPath
 )
 
 $ErrorActionPreference = 'Stop'
@@ -16,7 +18,9 @@ function Get-TreeRecords([string]$root) {
     $records = @()
     if (-not (Test-Path -LiteralPath $root -PathType Container)) { return $records }
     Get-ChildItem -LiteralPath $root -Recurse -File | ForEach-Object {
-        $relative = [IO.Path]::GetRelativePath($root, $_.FullName).Replace('\', '/')
+        $rootFull = [IO.Path]::GetFullPath($root).TrimEnd('\') + '\'
+        $fileFull = [IO.Path]::GetFullPath($_.FullName)
+        $relative = $fileFull.Substring($rootFull.Length).Replace('\', '/')
         $records += [PSCustomObject]@{
             path = $relative
             hash = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash
@@ -131,3 +135,23 @@ New-Item -ItemType Directory -Force -Path $cursorRoot | Out-Null
     skills = $installed
 } | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $recordPath -Encoding UTF8
 Write-Host "安装完成：$recordPath"
+
+if (-not $WhatIf -and -not $SkipCodeGraph) {
+    $targetProject = $ProjectPath
+    if ([string]::IsNullOrWhiteSpace($targetProject)) {
+        $currentPath = (Get-Location).Path
+        $repoFullPath = [IO.Path]::GetFullPath($repoRoot).TrimEnd('\')
+        $currentFullPath = [IO.Path]::GetFullPath($currentPath).TrimEnd('\')
+        if ($currentFullPath -ne $repoFullPath -and (Test-Path -LiteralPath (Join-Path $currentFullPath '.git') -PathType Container)) {
+            $targetProject = $currentFullPath
+        }
+    }
+
+    if ([string]::IsNullOrWhiteSpace($targetProject)) {
+        Write-Host '未指定目标项目，已跳过 CodeGraph 检测。需要时请使用 -ProjectPath <项目目录> 重新执行安装器。'
+    } else {
+        $codeGraphSetup = Join-Path $repoRoot 'scripts\setup-codegraph.ps1'
+        & $codeGraphSetup -ProjectPath $targetProject
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+    }
+}

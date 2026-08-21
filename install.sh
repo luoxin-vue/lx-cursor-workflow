@@ -3,11 +3,19 @@ set -euo pipefail
 
 WHAT_IF=0
 UNINSTALL=0
-for arg in "$@"; do
-  case "$arg" in
-    --what-if) WHAT_IF=1 ;;
-    --uninstall) UNINSTALL=1 ;;
-    *) echo "未知参数：$arg" >&2; exit 2 ;;
+SKIP_CODEGRAPH=0
+PROJECT_PATH=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --what-if) WHAT_IF=1; shift ;;
+    --uninstall) UNINSTALL=1; shift ;;
+    --skip-codegraph) SKIP_CODEGRAPH=1; shift ;;
+    --project)
+      [[ $# -ge 2 ]] || { echo '--project 需要项目目录' >&2; exit 2; }
+      PROJECT_PATH="$2"
+      shift 2
+      ;;
+    *) echo "未知参数：$1" >&2; exit 2 ;;
   esac
 done
 
@@ -82,4 +90,15 @@ for name in "${SKILLS[@]}"; do
 done
 mv -- "$RECORD_PATH.tmp" "$RECORD_PATH"
 echo "安装完成：$RECORD_PATH"
+
+if [[ "$WHAT_IF" -eq 0 && "$SKIP_CODEGRAPH" -eq 0 ]]; then
+  if [[ -z "$PROJECT_PATH" && "$PWD" != "$REPO_ROOT" && -d "$PWD/.git" ]]; then
+    PROJECT_PATH="$PWD"
+  fi
+  if [[ -n "$PROJECT_PATH" ]]; then
+    bash "$REPO_ROOT/scripts/setup-codegraph.sh" "$PROJECT_PATH"
+  else
+    echo '未指定目标项目，已跳过 CodeGraph 检测。需要时请使用 --project <项目目录> 重新执行安装器。'
+  fi
+fi
 

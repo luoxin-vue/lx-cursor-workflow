@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param()
 
 $ErrorActionPreference = 'Stop'
@@ -19,16 +19,16 @@ try {
     & $powershell -NoProfile -ExecutionPolicy Bypass -File $install -WhatIf | Out-Host
     Assert-True (-not (Test-Path (Join-Path $tempRoot '.cursor'))) 'WhatIf 不应创建 Cursor 目录'
 
-    & $powershell -NoProfile -ExecutionPolicy Bypass -File $install | Out-Host
+    & $powershell -NoProfile -ExecutionPolicy Bypass -File $install -SkipCodeGraph | Out-Host
     $destination = Join-Path $tempRoot '.cursor\skills'
     Assert-True (Test-Path (Join-Path $destination 'lx-grill\SKILL.md')) '首次安装缺少 lx-grill'
     Assert-True (Test-Path (Join-Path $destination 'lx-bugfix\SKILL.md')) '首次安装缺少 lx-bugfix'
     Assert-True (Test-Path (Join-Path $tempRoot '.cursor\lx-cursor-workflow.manifest.json')) '缺少安装记录'
 
-    & $powershell -NoProfile -ExecutionPolicy Bypass -File $install | Out-Host
+    & $powershell -NoProfile -ExecutionPolicy Bypass -File $install -SkipCodeGraph | Out-Host
     $conflictFile = Join-Path $destination 'lx-grill\SKILL.md'
     Add-Content -LiteralPath $conflictFile -Value "`n# intentional conflict"
-    & $powershell -NoProfile -ExecutionPolicy Bypass -File $install 2>$null
+    & $powershell -NoProfile -ExecutionPolicy Bypass -File $install -SkipCodeGraph 2>$null
     Assert-True ($LASTEXITCODE -eq 2) '冲突安装没有返回退出码 2'
 
     & $powershell -NoProfile -ExecutionPolicy Bypass -File $install -Uninstall | Out-Host

@@ -117,4 +117,10 @@ Ponytail governs what you build, not how you talk (pair with Caveman for
 terse prose). "stop ponytail" / "normal mode": revert. Level persists until
 changed or session end.
 
+Company and project rules govern the solution before Ponytail does. Required
+coding standards, shared components, page templates, tests, security controls,
+and release conventions outrank the shortest diff. Reuse the project's
+approved patterns; if a conflict cannot be satisfied together, stop and
+surface it instead of silently choosing the laziest option.
+
 The shortest path to done is the right path.

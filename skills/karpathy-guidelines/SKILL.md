@@ -65,3 +65,7 @@ For multi-step tasks, state a brief plan:
 ```
 
 Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
+
+## Project Rules Boundary
+
+These guidelines are subordinate to the target project's company and local rules. Do not use "surgical changes", simplicity, or reuse as a reason to bypass required coding standards, shared components, page templates, tests, security controls, or release conventions. When a conflict is real and cannot be satisfied together, surface it before editing.
